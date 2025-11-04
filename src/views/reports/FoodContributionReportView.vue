@@ -96,6 +96,7 @@
                             </caption>
                             <thead>
                                 <tr>
+                                    <th><b>Líder</b></th>
                                     <th><b>Família</b></th>
                                     <th><b>Bairro</b></th>
                                     <th><b>Total de Crianças</b></th>
@@ -103,6 +104,7 @@
                             </thead>
                             <tbody>
                                 <tr v-for="family in familiesWithNoContributionList" :key="family.responsibleName">
+                                    <td>{{ family.leaderName }}</td>
                                     <td>{{ family.responsibleName }}</td>
                                     <td>{{ family.neighborhoodName }}</td>
                                     <td>{{ family.totalChildren }}</td>
