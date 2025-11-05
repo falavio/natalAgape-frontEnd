@@ -96,6 +96,7 @@
                             </caption>
                             <thead>
                                 <tr>
+                                    <th><b>Líder</b></th>
                                     <th><b>Família</b></th>
                                     <th><b>Bairro</b></th>
                                     <th><b>Total de Crianças</b></th>
@@ -103,6 +104,7 @@
                             </thead>
                             <tbody>
                                 <tr v-for="family in familiesWithNoContributionList" :key="family.responsibleName">
+                                    <td>{{ family.leaderName }}</td>
                                     <td>{{ family.responsibleName }}</td>
                                     <td>{{ family.neighborhoodName }}</td>
                                     <td>{{ family.totalChildren }}</td>
@@ -202,9 +204,23 @@ export default {
                 this.familiesWithPendingContribution = response.data.familiesWithPendingContribution;
                 this.totalActiveFamilies = response.data.totalActiveFamilies;
 
-                this.familiesWithContributionList = response.data.familiesWithContributionList;
-                this.familiesWithNoContributionList = response.data.familiesWithNoContributionList;
-                this.familiesWithPendingContributionList = response.data.familiesWithPendingContributionList;
+               // this.familiesWithContributionList = response.data.familiesWithContributionList;
+               // this.familiesWithNoContributionList = response.data.familiesWithNoContributionList;
+               // this.familiesWithPendingContributionList = response.data.familiesWithPendingContributionList;
+
+                this.familiesWithContributionList = [...response.data.familiesWithContributionList].sort((a, b) => {
+                    const byLeader = (a.leaderName || '').localeCompare(b.leaderName || '', 'pt-BR', { sensitivity: 'base' });
+                    return byLeader !== 0 ? byLeader : (a.responsibleName || '').localeCompare(b.responsibleName || '', 'pt-BR', { sensitivity: 'base' });
+                });
+                this.familiesWithNoContributionList = [...response.data.familiesWithNoContributionList].sort((a, b) => {
+                    const byLeader = (a.leaderName || '').localeCompare(b.leaderName || '', 'pt-BR', { sensitivity: 'base' });
+                    return byLeader !== 0 ? byLeader : (a.responsibleName || '').localeCompare(b.responsibleName || '', 'pt-BR', { sensitivity: 'base' });
+                });
+                this.familiesWithPendingContributionList = [...response.data.familiesWithPendingContributionList].sort((a, b) => {
+                    const byLeader = (a.leaderName || '').localeCompare(b.leaderName || '', 'pt-BR', { sensitivity: 'base' });
+                    return byLeader !== 0 ? byLeader : (a.responsibleName || '').localeCompare(b.responsibleName || '', 'pt-BR', { sensitivity: 'base' });
+                });
+
                 this.valueNoContribution = response.data.valueNoContribution;
                 this.valuePendingContribution = response.data.valuePendingContribution;
 
@@ -341,6 +357,7 @@ export default {
 
             // Table data
             const tableData = this.familiesWithNoContributionList.map(item => [
+                item.leaderName,
                 item.responsibleName,
                 item.neighborhoodName,
                 item.totalChildren,
@@ -348,7 +365,7 @@ export default {
 
             // AutoTable
             autoTable(doc, {
-                head: [['Família', 'Bairro', 'Total de Crianças']],
+                head: [['Líder','Família', 'Bairro', 'Total de Crianças']],
                 body: tableData,
                 startY: 80,
                 styles: {
